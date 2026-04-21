@@ -1,0 +1,70 @@
+Microsoft (R) Macro Assembler Version 5.00                  4/20/26 09:15:13
+                                                             Page     1-1
+
+
+ 0000				data segment 
+ 0000  0008			  a dw 8 
+ 0002  0003 0002 0005 0006	  score dw 3, 2, 5, 6, 7, 8 
+       0007 0008		
+ 000E  0064 00C8 012C		  tail dw 100, 200, 300 
+ 0014				data ends 
+				 
+ 0000				code segment 
+				  assume ds:data, cs:code 
+ 0000				start: 
+ 0000  B8 ---- R		  mov ax, data 
+ 0003  8E D8			  mov ds, ax 
+				 
+ 0005  BB 0002 R		  mov bx, offset score 
+ 0008  8B F3			  mov si, bx ; si = score的首地址 
+				 
+ 000A  8B FB			  mov di, bx 
+ 000C  83 C7 04			  add di, 4 ; di = score[1] 
+				 
+ 000F  8B EB			  mov bp, bx 
+ 0011  83 C5 08			  add bp, 8 ; bp = score[2] 
+				 
+ 0014  8B D3			  mov dx, bx 
+ 0016  83 C2 0C			  add dx, 0ch ; dx = score[3]（越界的第3�
+				�地址） 
+				 
+ 0019  8B 47 0A			  mov ax, [bx+0ah] ; ax = score[2][1] = 8 
+ 001C  8B 4F 10			  mov cx, [bx+10h] ; cs = score[3][2], 越界 
+				 
+ 001F  B8 4C00			  mov ax, 4c00h 
+ 0022  CD 21			  int 21h 
+ 0024				code ends 
+				end start 
+Microsoft (R) Macro Assembler Version 5.00                  4/20/26 09:15:13
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	0024	PARA	NONE	
+DATA . . . . . . . . . . . . . .  	0014	PARA	NONE	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+A  . . . . . . . . . . . . . . .  	L WORD	0000	DATA
+
+SCORE  . . . . . . . . . . . . .  	L WORD	0002	DATA
+START  . . . . . . . . . . . . .  	L NEAR	0000	CODE
+
+TAIL . . . . . . . . . . . . . .  	L WORD	000E	DATA
+
+@FILENAME  . . . . . . . . . . .  	TEXT  3_2		
+
+
+     31 Source  Lines
+     31 Total   Lines
+      8 Symbols
+
+  51076 + 465468 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

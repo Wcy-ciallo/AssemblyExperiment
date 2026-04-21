@@ -1,0 +1,104 @@
+Microsoft (R) Macro Assembler Version 5.00                  4/16/26 11:35:42
+                                                             Page     1-1
+
+
+ 0000				data segment 
+ 0000  69 6E 70 75 74 20 63	info1 db 'input class id:$' 
+       6C 61 73 73 20 69 64	
+       3A 24			
+ 0010  0D 0A 69 6E 70 75 74	info2 db 0dh, 0ah, 'input student id:$' 
+       20 73 74 75 64 65 6E	
+       74 20 69 64 3A 24	
+ 0024  0064 0062 0062 0061	score dw 100, 98, 98, 97, 95 
+       005F			
+ 002E  0064 0062 0060 005F	      dw 100, 98, 96, 95, 95 
+       005F			
+ 0038  05			sn db 5 
+				 
+ 0039				data ends 
+				; 查找出来的成绩放到ax里面 
+				 
+ 0000				code segment 
+				assume cs:code, ds:data 
+ 0000				start: 
+ 0000  B8 ---- R		  mov ax, data 
+ 0003  8E D8			  mov ds, ax 
+				 
+				  ; 直接寻址 
+ 0005  A1 002E			  mov ax, ds:[002eh] 
+				 
+				  ; 寄存器间接寻址  
+ 0008  BA 0000 R		  mov dx, offset info1 
+ 000B  B4 09			  mov ah, 9h 
+ 000D  CD 21			  int 21h 
+				   
+ 000F  B4 01			  mov ah, 1h 
+ 0011  CD 21			  int 21h ; 输入班级号 
+ 0013  2C 30			  sub al, 30h 
+ 0015  FE C8			  dec al 
+ 0017  8A 0E 0038 R		  mov cl, sn 
+ 001B  F6 E1			  mul cl ; al = (class_id - 1) * 5 
+ 001D  B1 02			  mov cl, 2 
+ 001F  F6 E1			  mul cl ; al=(class_id - 1)*5*2 我前面班�
+				�的学生在内存中占用的字节个数 
+ 0021  8B D8			  mov bx, ax 
+				 
+ 0023  BA 0010 R		  mov dx, offset info2 
+ 0026  B4 09			  mov ah, 9h 
+ 0028  CD 21			  int 21h 
+				   
+ 002A  B4 01			  mov ah, 1h 
+ 002C  CD 21			  int 21h 
+ 002E  2C 30			  sub al, 30h 
+ 0030  FE C8			  dec al 
+ 0032  B1 02			  mov cl, 2 
+ 0034  F6 E1			  mul cl ; ax=(student_id-1)*2 我班级中前�
+				��学生在内存中占用的字节数 
+ 0036  03 D8			  add bx, ax 
+				 
+Microsoft (R) Macro Assembler Version 5.00                  4/16/26 11:35:42
+                                                             Page     1-2
+
+
+ 0038  BA 0024 R		  mov dx, offset score 
+ 003B  03 DA			  add bx, dx ; 最终的学生的地址 
+ 003D  8B 07			  mov ax, [bx] 
+				 
+ 003F  B4 4C			  mov ah, 4ch 
+ 0041  CD 21			  int 21h 
+				 
+ 0043				code ends 
+				end start 
+Microsoft (R) Macro Assembler Version 5.00                  4/16/26 11:35:42
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	0043	PARA	NONE	
+DATA . . . . . . . . . . . . . .  	0039	PARA	NONE	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+INFO1  . . . . . . . . . . . . .  	L BYTE	0000	DATA
+INFO2  . . . . . . . . . . . . .  	L BYTE	0010	DATA
+
+SCORE  . . . . . . . . . . . . .  	L WORD	0024	DATA
+SN . . . . . . . . . . . . . . .  	L BYTE	0038	DATA
+START  . . . . . . . . . . . . .  	L NEAR	0000	CODE
+
+@FILENAME  . . . . . . . . . . .  	TEXT  4_2_1		
+
+
+     55 Source  Lines
+     55 Total   Lines
+      9 Symbols
+
+  51062 + 465482 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

@@ -1,0 +1,101 @@
+Microsoft (R) Macro Assembler Version 5.00                  4/18/26 20:18:52
+                                                             Page     1-1
+
+
+ 0000				data segment 
+ 0000  69 6E 70 75 74 20 63	info1 db 'input class id:$' 
+       6C 61 73 73 20 69 64	
+       3A 24			
+ 0010  0D 0A 69 6E 70 75 74	info2 db 0dh, 0ah, 'input student id:$' 
+       20 73 74 75 64 65 6E	
+       74 20 69 64 3A 24	
+ 0024  0064 0062 0062 0061	score dw 100, 98, 98, 97, 95 
+       005F			
+ 002E  0064 0062 0060 005F	      dw 100, 98, 96, 95, 95 
+       005F			
+ 0038  05			sn db 5 
+				 
+ 0039				data ends 
+				; 查找出来的成绩放到ax里面 
+				 
+ 0000				code segment 
+				assume cs:code, ds:data 
+ 0000				start: 
+ 0000  B8 ---- R		  mov ax, data 
+ 0003  8E D8			  mov ds, ax 
+				 
+				  ; 相对基址变址寻址方式  
+ 0005  BA 0000 R		  mov dx, offset info1 
+ 0008  B4 09			  mov ah, 9h 
+ 000A  CD 21			  int 21h 
+				   
+ 000C  B4 01			  mov ah, 1h 
+ 000E  CD 21			  int 21h ; 输入班级号 
+ 0010  2C 30			  sub al, 30h 
+ 0012  FE C8			  dec al 
+ 0014  8A 0E 0038 R		  mov cl, sn 
+ 0018  F6 E1			  mul cl ; al = (class_id - 1) * 5 
+ 001A  B1 02			  mov cl, 2 
+ 001C  F6 E1			  mul cl ; al=(class_id - 1)*5*2 我前面班�
+				�的学生在内存中占用的字节个数 
+ 001E  8B D8			  mov bx, ax 
+				 
+ 0020  BA 0010 R		  mov dx, offset info2 
+ 0023  B4 09			  mov ah, 9h 
+ 0025  CD 21			  int 21h 
+				   
+ 0027  B4 01			  mov ah, 1h 
+ 0029  CD 21			  int 21h 
+ 002B  2C 30			  sub al, 30h 
+ 002D  FE C8			  dec al 
+ 002F  B1 02			  mov cl, 2 
+ 0031  F6 E1			  mul cl ; ax=(student_id-1)*2 我班级中前�
+				��学生在内存中占用的字节数 
+ 0033  33 F6			  xor si, si 
+ 0035  03 F0			  add si, ax 
+				 
+ 0037  8B 80 0024 R		  mov ax, score[bx][si] 
+				 
+Microsoft (R) Macro Assembler Version 5.00                  4/18/26 20:18:52
+                                                             Page     1-2
+
+
+				 
+ 003B  B4 4C			  mov ah, 4ch 
+ 003D  CD 21			  int 21h 
+				 
+ 003F				code ends 
+				end start 
+Microsoft (R) Macro Assembler Version 5.00                  4/18/26 20:18:52
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	003F	PARA	NONE	
+DATA . . . . . . . . . . . . . .  	0039	PARA	NONE	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+INFO1  . . . . . . . . . . . . .  	L BYTE	0000	DATA
+INFO2  . . . . . . . . . . . . .  	L BYTE	0010	DATA
+
+SCORE  . . . . . . . . . . . . .  	L WORD	0024	DATA
+SN . . . . . . . . . . . . . . .  	L BYTE	0038	DATA
+START  . . . . . . . . . . . . .  	L NEAR	0000	CODE
+
+@FILENAME  . . . . . . . . . . .  	TEXT  4_2_3		
+
+
+     52 Source  Lines
+     52 Total   Lines
+      9 Symbols
+
+  50986 + 465558 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

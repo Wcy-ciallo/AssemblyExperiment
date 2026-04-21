@@ -1,0 +1,57 @@
+Microsoft (R) Macro Assembler Version 5.00                  4/20/26 08:49:53
+                                                             Page     1-1
+
+
+ 0000				data segment 
+ 0000  0008			  a dw 8 
+ 0002  0010 0020 0040		  arr dw 16, 32, 64 
+ 0008  0080			  b dw 128 
+ 000A				data ends 
+				 
+ 0000				code segment 
+				  assume cs:code, ds:data 
+ 0000				start: 
+ 0000  B8 ---- R		  mov ax, data 
+ 0003  8E D8			  mov ds, ax 
+				 
+ 0005  BB 0002 R		  mov bx, offset arr 
+ 0008  C7 47 FE 0003		  mov word ptr [bx-2], 3 
+ 000D  C7 47 0E 0004		  mov word ptr [bx+14], 4 
+				 
+ 0012  B8 004C			  mov ax, 4ch 
+ 0015  CD 21			  int 21h 
+ 0017				code ends 
+				end start 
+Microsoft (R) Macro Assembler Version 5.00                  4/20/26 08:49:53
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	0017	PARA	NONE	
+DATA . . . . . . . . . . . . . .  	000A	PARA	NONE	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+A  . . . . . . . . . . . . . . .  	L WORD	0000	DATA
+ARR  . . . . . . . . . . . . . .  	L WORD	0002	DATA
+
+B  . . . . . . . . . . . . . . .  	L WORD	0008	DATA
+
+START  . . . . . . . . . . . . .  	L NEAR	0000	CODE
+
+@FILENAME  . . . . . . . . . . .  	TEXT  3_1		
+
+
+     20 Source  Lines
+     20 Total   Lines
+      8 Symbols
+
+  51038 + 465506 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors
