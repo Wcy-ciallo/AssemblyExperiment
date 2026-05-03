@@ -1,0 +1,60 @@
+Microsoft (R) Macro Assembler Version 5.00                  5/3/26 10:43:07
+                                                             Page     1-1
+
+
+				assume cs:code,ds:data 
+ 0000				data segment 
+ 0000  4F  ??			buf db 79,?,80 dup(?) 
+       0050[			
+	    ??			
+			 ]	
+				
+ 0052				data ends 
+ 0000				code segment 
+ 0000				start: 
+ 0000  BB ---- R		mov bx,data 
+ 0003  8E DB			mov ds,bx 
+ 0005  BA 0000 R		mov dx,offset buf 
+ 0008  B4 0A			mov ah,0ah 
+ 000A  CD 21			int 21h 
+ 000C  8A 1E 0001 R		mov bl,buf[1] 
+ 0010  83 C3 02			add bx,2 
+ 0013  C6 87 0000 R 24		mov buf[bx],'$' 
+ 0018  C6 06 0000 R 0A		mov buf[0],0ah 
+ 001D  C6 06 0001 R 0D		mov buf[1],0dh 
+ 0022  B4 09			mov ah,9 
+ 0024  CD 21			int 21h 
+ 0026  B4 4C			mov ah,4ch 
+ 0028  CD 21			int 21h 
+ 002A				code ends 
+				end start 
+Microsoft (R) Macro Assembler Version 5.00                  5/3/26 10:43:07
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	002A	PARA	NONE	
+DATA . . . . . . . . . . . . . .  	0052	PARA	NONE	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+BUF  . . . . . . . . . . . . . .  	L BYTE	0000	DATA
+
+START  . . . . . . . . . . . . .  	L NEAR	0000	CODE
+
+@FILENAME  . . . . . . . . . . .  	TEXT  test		
+
+
+     22 Source  Lines
+     22 Total   Lines
+      6 Symbols
+
+  51060 + 465484 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors
