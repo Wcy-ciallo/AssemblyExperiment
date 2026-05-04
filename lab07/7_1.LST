@@ -1,0 +1,207 @@
+Microsoft (R) Macro Assembler Version 5.00                  5/3/26 29:13:33
+                                                             Page     1-1
+
+
+ 0000				data segment 
+ 0000  4E 5C 37 60 2B 58 3D	  score db 78, 92, 55, 96, 43, 88, 61, 90 
+       5A			
+ 0008  5B 3B 4C 64 2D 53 43	        db 91, 59, 76,100, 45, 83, 67, 94 
+       5E			
+ 0010  3A 3E 61 59 36 5D 46	        db 58, 62, 97, 89, 54, 93, 70, 99 
+       63			
+ 0018  0003[			  max db 3 dup(0) 
+	   00			
+			 ]	
+				
+ 001B  0003[			  min db 3 dup (0) 
+	   00			
+			 ]	
+				
+ 001E  0018[			  good db 24 dup(0) 
+	   00			
+			 ]	
+				
+ 0036  0018[			  fail db 24 dup(0) 
+	   00			
+			 ]	
+				
+ 004E  0000			  cn  dw 0 
+ 0050  0000			  sn dw 0 
+ 0052				data ends 
+ 0000				code segment 
+				  assume cs:code, ds:data 
+ 0000				start: 
+ 0000  B8 ---- R		  mov ax, data 
+ 0003  8E D8			  mov ds, ax 
+				 
+ 0005  B9 0003			  mov cx, 3 
+ 0008  C7 06 004E R 0000	  mov word ptr cn, 0 
+ 000E  BF 0000			  mov di, 0 
+ 0011  BD 0000			  mov bp, 0 
+ 0014				outer_loop: 
+ 0014  51			  push cx 
+ 0015  B9 0008			  mov cx, 8 
+ 0018  C7 06 0050 R 0000	  mov word ptr sn, 0 
+ 001E				inner_loop: 
+				  ; bx是前面班级在内存中占用的字�
+				�个数 
+ 001E  A1 004E R		  mov ax, cn 
+ 0021  BB 0008			  mov bx, 8 
+ 0024  F7 E3			  mul bx 
+ 0026  8B D8			  mov bx, ax 
+				  ; si 是当前学生的序号 
+ 0028  8B 36 0050 R		  mov si, sn 
+				 
+ 002C  8A 80 0000 R		  mov al, score[bx][si] 
+ 0030  3C 5A			  cmp al, 90 
+ 0032  72 0D			  jb let2 
+ 0034  8B 1E 004E R		  mov bx, cn 
+Microsoft (R) Macro Assembler Version 5.00                  5/3/26 29:13:33
+                                                             Page     1-2
+
+
+ 0038  FE 87 0018 R		  inc byte ptr max[bx] 
+ 003C  88 85 001E R		  mov good[di], al 
+ 0040  47			  inc di 
+ 0041				let2: 
+ 0041  3C 3C			  cmp al, 60 
+ 0043  73 0E			  jae let3 
+ 0045  8B 1E 004E R		  mov bx, cn 
+ 0049  FE 87 001B R		  inc byte ptr min[bx] 
+ 004D  3E: 88 86 0036 R		  mov ds:fail[bp], al 
+ 0052  45			  inc bp 
+ 0053				let3: 
+ 0053  FF 06 0050 R		  inc word ptr sn 
+ 0057  E2 C5			  loop inner_loop 
+				 
+ 0059  FF 06 004E R		  inc word ptr cn 
+ 005D  59			  pop cx 
+ 005E  E2 B4			  loop outer_loop 
+				 
+ 0060  8B C7			  mov ax, di 
+ 0062  3D 0001			  cmp ax, 1 
+ 0065  76 1F			  jbe sort_fail        ; 0个或1个元素不�
+				�排序 
+				 
+ 0067  48			  dec ax               ; 外层循环次数 = n
+				 - 1 
+ 0068  8B C8			  mov cx, ax 
+				 
+ 006A				good_outer: 
+ 006A  51			  push cx              ; 保存外层循环次�
+				�� 
+ 006B  BE 0000			  mov si, 0            ; SI 从数组第0个元
+				素开始 
+				 
+ 006E				good_inner: 
+ 006E  8A 84 001E R		  mov al, good[si] 
+ 0072  3A 84 001F R		  cmp al, good[si+1] 
+ 0076  73 08			  jae good_no_swap     ; 如果 good[si] >= goo
+				d[si+1]，不用换 
+				 
+				  ; 否则交换两个相邻成绩 
+ 0078  86 84 001F R		  xchg al, good[si+1] 
+ 007C  88 84 001E R		  mov good[si], al 
+				 
+ 0080				good_no_swap: 
+ 0080  46			  inc si 
+ 0081  E2 EB			  loop good_inner 
+				 
+ 0083  59			  pop cx 
+ 0084  E2 E4			  loop good_outer 
+				 
+				  ; 对 fail 数组降序冒泡排序 
+				  ; BP 中保存 fail 数组有效成绩个数 
+ 0086				sort_fail: 
+ 0086  8B C5			  mov ax, bp 
+Microsoft (R) Macro Assembler Version 5.00                  5/3/26 29:13:33
+                                                             Page     1-3
+
+
+ 0088  3D 0001			  cmp ax, 1 
+ 008B  76 1F			  jbe sort_done        ; 0个或1个元素不�
+				�排序 
+				 
+ 008D  48			  dec ax 
+ 008E  8B C8			  mov cx, ax 
+				 
+ 0090				fail_outer: 
+ 0090  51			  push cx 
+ 0091  BE 0000			  mov si, 0 
+				 
+ 0094				fail_inner: 
+ 0094  8A 84 0036 R		  mov al, fail[si] 
+ 0098  3A 84 0037 R		  cmp al, fail[si+1] 
+ 009C  73 08			  jae fail_no_swap     ; 如果 fail[si] >= fai
+				l[si+1]，不用换 
+				 
+ 009E  86 84 0037 R		  xchg al, fail[si+1] 
+ 00A2  88 84 0036 R		  mov fail[si], al 
+				 
+ 00A6				fail_no_swap: 
+ 00A6  46			  inc si 
+ 00A7  E2 EB			  loop fail_inner 
+				 
+ 00A9  59			  pop cx 
+ 00AA  E2 E4			  loop fail_outer 
+				 
+				 
+ 00AC				sort_done: 
+ 00AC  B4 4C			  mov ah, 4ch 
+ 00AE  CD 21			  int 21h 
+ 00B0				code ends 
+				end start 
+Microsoft (R) Macro Assembler Version 5.00                  5/3/26 29:13:33
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CODE . . . . . . . . . . . . . .  	00B0	PARA	NONE	
+DATA . . . . . . . . . . . . . .  	0052	PARA	NONE	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+CN . . . . . . . . . . . . . . .  	L WORD	004E	DATA
+
+FAIL . . . . . . . . . . . . . .  	L BYTE	0036	DATA	Length = 0018
+FAIL_INNER . . . . . . . . . . .  	L NEAR	0094	CODE
+FAIL_NO_SWAP . . . . . . . . . .  	L NEAR	00A6	CODE
+FAIL_OUTER . . . . . . . . . . .  	L NEAR	0090	CODE
+
+GOOD . . . . . . . . . . . . . .  	L BYTE	001E	DATA	Length = 0018
+GOOD_INNER . . . . . . . . . . .  	L NEAR	006E	CODE
+GOOD_NO_SWAP . . . . . . . . . .  	L NEAR	0080	CODE
+GOOD_OUTER . . . . . . . . . . .  	L NEAR	006A	CODE
+
+INNER_LOOP . . . . . . . . . . .  	L NEAR	001E	CODE
+
+LET2 . . . . . . . . . . . . . .  	L NEAR	0041	CODE
+LET3 . . . . . . . . . . . . . .  	L NEAR	0053	CODE
+
+MAX  . . . . . . . . . . . . . .  	L BYTE	0018	DATA	Length = 0003
+MIN  . . . . . . . . . . . . . .  	L BYTE	001B	DATA	Length = 0003
+
+OUTER_LOOP . . . . . . . . . . .  	L NEAR	0014	CODE
+
+SCORE  . . . . . . . . . . . . .  	L BYTE	0000	DATA
+SN . . . . . . . . . . . . . . .  	L WORD	0050	DATA
+SORT_DONE  . . . . . . . . . . .  	L NEAR	00AC	CODE
+SORT_FAIL  . . . . . . . . . . .  	L NEAR	0086	CODE
+START  . . . . . . . . . . . . .  	L NEAR	0000	CODE
+
+@FILENAME  . . . . . . . . . . .  	TEXT  7_1		
+
+
+    118 Source  Lines
+    118 Total   Lines
+     24 Symbols
+
+  50998 + 465546 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors
