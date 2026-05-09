@@ -63,6 +63,8 @@ end start
 - `lab06/` — Experiment 6: branch program design and menu jump-table program (`6_1.asm`, `6_2.asm`, `6_2.png`, `6.docx`).
 - `lab07/` — Experiment 7: loop program design, score statistics, `good`/`fail` arrays, and descending bubble sort (`7_1.asm`, `7_1.LST`, flowchart/result screenshots, `7.docx`).
 - `hw5/` — Homework 5 source files (no compiled artifacts, `.asm` only)
+- `hw6/` — Homework 6 source files for string copy, loops, array search, output, and sorting.
+- `hw7/` — Homework 7 source files for subroutine design, numeric conversion, array processing, bit counting, and signed-byte summation.
 - `.docx` files at root level — Course guide, cover template, report template
 
 ## Current Lab Notes
@@ -70,3 +72,19 @@ end start
 - Experiment 5 (`lab05/5_1.asm`) reads a decimal number from 0 to 255, accumulates it with `num = num * 10 + digit`, divides by 16 repeatedly, stores hex digits in reverse order, then prints them in reverse.
 - Experiment 6 (`lab06/6_2.asm`) uses a jump table for menu dispatch. The table order should match the numeric menu values: `0 -> prog0`, `1 -> prog1`, `2 -> prog2`, `3 -> prog3`.
 - Experiment 7 (`lab07/7_1.asm`) treats `score` as a 3 x 8 byte array. Expected debug-visible results for the current data are `max = 03 03 03`, `min = 02 02 02`, `good = 64 63 61 60 5E 5D 5C 5B 5A`, and `fail = 3B 3A 37 36 2D 2B`.
+
+## Homework 7 Notes
+
+- `hw7` uses two-space indentation in the assembly body. Keep short header comments that describe the exercise and required data segment variables; avoid adding line-by-line explanatory comments unless needed for clarity.
+- Several files contain only a `proc` body rather than a full `data/code/end start` program. Do not add a full program wrapper unless the assignment asks for an independently runnable file.
+- Preserve caller registers in subroutines unless a register is the intended return value. For example, `7_28.asm` returns the bit count in `CL`, and `7_21.asm` receives the value to print in `BX`.
+- When mixing byte variables with word registers, load bytes through `AL/BL/CL` and clear the high byte explicitly (`AH/BH/CH`) before using the word register in address or loop calculations.
+- Current `hw7` files:
+  - `7_16.asm`: keyboard digit input into `buffer`, with `count` storing the number of digits.
+  - `7_17.asm`: decimal digit input accumulated as `x = x * 10 + digit`.
+  - `7_18.asm`: byte-array summation using `array`, `num`, and `result`.
+  - `7_20.asm`: hexadecimal display of byte variable `x`.
+  - `7_21.asm`: decimal display of the unsigned value passed in `BX`.
+  - `7_28.asm`: count set bits in `AX`, returning the count in `CL`.
+  - `7_29.asm`: find the maximum byte in `array` and store it in `max`.
+  - `7_30.asm`: sum negative signed-byte elements in arrays `A` and `B`.
