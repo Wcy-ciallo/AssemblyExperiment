@@ -58,10 +58,11 @@ end start
 
 ## Directory Structure
 
-- `lab01/`–`lab07/` — Course experiment folders. Newer folders use the `labNN` naming convention.
+- `lab01/`–`lab08/` — Course experiment folders. Newer folders use the `labNN` naming convention.
 - `lab05/` — Experiment 5: flowchart design, logic debugging, and decimal-to-hex conversion (`5_1.asm`, `lab05.png`, `5.docx`).
 - `lab06/` — Experiment 6: branch program design and menu jump-table program (`6_1.asm`, `6_2.asm`, `6_2.png`, `6.docx`).
 - `lab07/` — Experiment 7: loop program design, score statistics, `good`/`fail` arrays, and descending bubble sort (`7_1.asm`, `7_1.LST`, flowchart/result screenshots, `7.docx`).
+- `lab08/` — Experiment 8: subroutine-based student name/score input, rank-table sorting, and descending score output (`8.asm`, `8.docx`, `8流程图.drawio`, flowchart reference images).
 - `hw5/` — Homework 5 source files (no compiled artifacts, `.asm` only)
 - `hw6/` — Homework 6 source files for string copy, loops, array search, output, and sorting.
 - `hw7/` — Homework 7 source files for subroutine design, numeric conversion, array processing, bit counting, and signed-byte summation.
@@ -72,6 +73,7 @@ end start
 - Experiment 5 (`lab05/5_1.asm`) reads a decimal number from 0 to 255, accumulates it with `num = num * 10 + digit`, divides by 16 repeatedly, stores hex digits in reverse order, then prints them in reverse.
 - Experiment 6 (`lab06/6_2.asm`) uses a jump table for menu dispatch. The table order should match the numeric menu values: `0 -> prog0`, `1 -> prog1`, `2 -> prog2`, `3 -> prog3`.
 - Experiment 7 (`lab07/7_1.asm`) treats `score` as a 3 x 8 byte array. Expected debug-visible results for the current data are `max = 03 03 03`, `min = 02 02 02`, `good = 64 63 61 60 5E 5D 5C 5B 5A`, and `fail = 3B 3A 37 36 2D 2B`.
+- Experiment 8 (`lab08/8.asm`) uses subroutines `inName`, `inScore`, `sort`, `disName`, and `disScore` to input 5 students, keep ASCII scores in `scoreA`, numeric scores in `scoreN`, sort `scoreN` in descending order, and use the `rank` table to print the original names and scores without moving the name records.
 
 ## Homework 7 Notes
 
